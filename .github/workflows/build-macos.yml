@@ -1,9 +1,7 @@
 name: Build macOS App
 
 on:
-  workflow_dispatch:
-  push:
-    branches: [ main ]
+  workflow_dispatch: # allows manual triggering
 
 jobs:
   build-macos:
@@ -13,18 +11,18 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
-      - name: Install Flutter
+      - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          channel: stable
+          flutter-version: '3.38.3'
+
+      - name: Install dependencies
+        run: flutter pub get
 
       - name: Enable macOS desktop
         run: flutter config --enable-macos-desktop
 
-      - name: Get dependencies
-        run: flutter pub get
-
-      - name: Build macOS app
+      - name: Build macOS release
         run: flutter build macos --release
 
       - name: Upload macOS build artifact
